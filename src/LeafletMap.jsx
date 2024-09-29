@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup,Tooltip } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup,Tooltip, useMap } from 'react-leaflet';
 
 const locations = [
     { lat: 13.0115, lng: 74.7943, name: "NITK" },                        // NITK, Surathkal
@@ -7,6 +7,20 @@ const locations = [
     { lat: 13.2357, lng: 74.7421, name: "NITTE" },                       // NITTE, Karkala
     { lat: 52.4882, lng: -1.8864, name: "Birmingham Institute of Technology" }  // Birmingham Institute of Technology, UK
 ];
+const Zoom = ({ position }) => {
+    const map = useMap();
+    
+    const handleClick = () => {
+      map.setView(position, 15); // Set the view to the clicked position with a zoom level of 15
+    };
+  
+        return (
+            <Marker position={position} eventHandlers={{ click: handleClick }}>
+                <Tooltip>{position.name}</Tooltip>
+                <Popup>{location.name}</Popup>
+            </Marker>
+        )
+  };
 
 const LeafletMap = () => {
   const center = [13.0115, 74.7943]; // Center on NITK
@@ -20,10 +34,7 @@ const LeafletMap = () => {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     />
                     {locations.map((location, index) => (
-                        <Marker key={index} position={[location.lat, location.lng]}>
-                            <Tooltip>{location.name}</Tooltip> 
-                            <Popup>{location.name}</Popup> 
-                        </Marker>
+                        <Zoom key={index} position={[location.lat, location.lng]}/>
                     ))}
                 </MapContainer>
             </div>
